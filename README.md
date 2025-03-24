@@ -1,10 +1,6 @@
-1.测试环境（自行按要求购买）
+1.测试环境
 
-在腾讯云官网购买cvm(https://cloud.tencent.com/product/cvm)，
-购买南京地域的标准型SA5机型，规格为2核4GiB内存+100GiB增强型SSD云硬盘（注意：压测此数据盘，不要压测系统盘）
-费用参考：按量计费 0.6/小时
-![企业微信截图_da8e1b99-29fb-4b48-8cf1-94b68d98b4f8](https://github.com/user-attachments/assets/10e5a8b8-748e-4d17-b393-10d290dd17ea)
-![image](https://github.com/user-attachments/assets/f74017b6-9e1c-4638-b9c0-69f3708cd07a)
+腾讯云 CVM：标准型 SA5 机型，规格为 2核4GiB、100GiB 增强型 SSD 云硬盘。
 
 2.测试题目说明
 
