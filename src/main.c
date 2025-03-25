@@ -7,6 +7,7 @@
 
 #include "mul.h"
 
+float sum = 0;
 typedef unsigned long long  UINT64;
 
 double TRIP_COUNT = (double)NUM * (double)NUM * (double)NUM;
@@ -88,7 +89,7 @@ void MultiplyOnce(int iter)
 	mflops = flops / 1000000.0f / secs;
 	printf("Matrix multiply iteration %d: cost %2.3lf seconds\n", iter, secs);
 	fflush(stdout);
-
+	sum += secs;
     // free memory
 	free (buf1);
 	free (buf2);
@@ -103,6 +104,7 @@ int main()
     for (int i = 1; i <= 100; i++) {
         MultiplyOnce(i);
     }
-
+	sum = sum * 1.0 / 100;
+	printf("Average cost %2.3lf", sum);
     return 0;
 }
