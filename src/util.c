@@ -72,11 +72,11 @@ void Initialize()
         exit(EXIT_FAILURE);
     }
 
-    snprintf(mlim_str, sizeof(mlim_str), "%dM", MEMORY_LIMIT_MB);
+    snprintf(mlim_str, sizeof(mlim_str), "%d", MEMORY_LIMIT_MB * 1024 * 1024);
     if (write(mlim_fd, mlim_str, sizeof(mlim_str)) == -1) {
         perror("Error setting memory limit");
         close(mlim_fd);
-        exit(EXIT_FAILURE);
+        return(EXIT_FAILURE);
     }
     close(mlim_fd);
 
