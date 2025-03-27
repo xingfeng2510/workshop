@@ -4,9 +4,9 @@
 #include <time.h>
 #include <malloc.h>
 #include <sys/time.h>
-
+#include <stdbool.h>
 #include "mul.h"
-
+#include <string.h>
 typedef unsigned long long  UINT64;
 
 double TRIP_COUNT = (double)NUM * (double)NUM * (double)NUM;
@@ -23,6 +23,20 @@ void init_arr(TYPE row, TYPE col, TYPE off, TYPE a[][NUM])
     for (i = 0; i < NUM; i++) {
         for (j = 0; j< NUM; j++) {
             a[i][j] = row * i + col * j + off;
+        }
+    }
+}
+
+void init_sparse_arr(TYPE row, TYPE col, TYPE off, TYPE a[][NUM], double density) {
+    int i, j;
+    srand(time(NULL));
+    for (i = 0; i < NUM; i++) {
+        for (j = 0; j < NUM; j++) {
+            if ((rand() / (double)RAND_MAX) < density) {
+                a[i][j] = row * i + col * j + off;
+            } else {
+                a[i][j] = 0;
+            }
         }
     }
 }
@@ -73,20 +87,29 @@ void MultiplyOnce(int iter)
 	t = (array *)addr4;
 
     // initialize the arrays with data
-	init_arr(3, -2, 1, a);
-	init_arr(-2, 1, 3, b);
-	init_arr(1, 3, -2, t);
+	init_sparse_arr(3, -2, 1, a, 1);
+	init_sparse_arr(-2, 1, 3, b, 1);
+	init_sparse_arr(1, 3, -2, t, 1);
+
+        gettimeofday(&before, NULL);
+        ParallelMultiply(NUM, a, b, c, t, true);
+        gettimeofday(&after, NULL);
+        secs = (after.tv_sec - before.tv_sec) + (after.tv_usec - before.tv_usec)/1000000.0;
+        flops = TRIP_COUNT * FLOP_PER_ITERATION;
+        mflops = flops / 1000000.0f / secs;
+        printf("Sparse Blocked Matrix Multiply iteration %d: cost %2.3lf seconds\n", iter, secs);
+        printf("%f, %f, %f\n", c[0][0], c[1024][1024], c[2023][2023]);
+	memset(*c, 0, NUM * NUM * sizeof(double));
 	
 	gettimeofday(&before, NULL);
 
-	ParallelMultiply(NUM, a, b, c, t);
-
+	ParallelMultiply(NUM, a, b, c, t, false);
 	gettimeofday(&after, NULL);
 	secs = (after.tv_sec - before.tv_sec) + (after.tv_usec - before.tv_usec)/1000000.0;
-
 	flops = TRIP_COUNT * FLOP_PER_ITERATION;
 	mflops = flops / 1000000.0f / secs;
-	printf("Matrix multiply iteration %d: cost %2.3lf seconds\n", iter, secs);
+	printf("Blockd Matrix Multiply iteration %d: cost %2.3lf seconds\n", iter, secs);
+	printf("%f, %f, %f\n", c[0][0], c[1024][1024], c[2023][2023]);
 	fflush(stdout);
 
     // free memory
