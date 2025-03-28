@@ -1,8 +1,8 @@
 SHELL = /bin/sh
 
 GCC     = gcc
-CFLAGS  = -g -O2 -fno-asm
-LDFLAGS = -lpthread -lm
+CFLAGS = -O3 -mavx2 -mfma -fopenmp
+LDFLAGS = -fopenmp -lm -lpthread
 
 GCC_EXE = workshop.gcc
 
