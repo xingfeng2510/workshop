@@ -2,7 +2,7 @@ SHELL = /bin/sh
 
 GCC     = gcc
 CFLAGS = -O3 -mavx2 -mfma -fopenmp
-LDFLAGS = -fopenmp -lm
+LDFLAGS = -fopenmp -lm -lpthread
 
 GCC_EXE = workshop.gcc
 
