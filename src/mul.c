@@ -12,29 +12,12 @@ void mul(int msize, int tidx, int numt, Vector *vec, TYPE a[][NUM], TYPE b[][NUM
     int end = last_thread ? msize : ((tidx + 1) * stride);
 
     // pre-allocate buffer (nearly helps)
-    // int numel_this_thread = (end - start) * msize;
-    // if (vec->capacity < vec->size + numel_this_thread) {
-    //     vec->capacity = vec->size + numel_this_thread;
-    //     vec->data = realloc(vec->data, vec->capacity * sizeof(int));
-    // }
-    
-    // TODO: tiling and no transpose v.s. transpose without tiling
+    int numel_this_thread = (end - start) * msize;
+    if (vec->capacity < vec->size + numel_this_thread) {
+        vec->capacity = vec->size + numel_this_thread;
+        vec->data = realloc(vec->data, vec->capacity * sizeof(int));
+    }
 
-    // transpose b to t
-    // for (int k = 0; k < msize; k++) {
-    //     for (int j = 0; j < msize; j++) {
-    //         t[j][k] = b[k][j];
-    //     }
-    // }
-    // TODO: cooperative transpose
-    // TODO: synchronize
-
-    // TODO: cpu affinity
-
-    // TODO: how about full i and partial j to avoid synchronization?
-    // if (tidx != 0) {
-    //     return;
-    // }
     for (int i = start; i < end; i++) {
         for (int j = 0; j < msize; j++) {
             TYPE acc = c[i][j];
@@ -45,7 +28,6 @@ void mul(int msize, int tidx, int numt, Vector *vec, TYPE a[][NUM], TYPE b[][NUM
             __m512d acc_vec = _mm512_setzero_pd(); // 8 * sizeof(double)
             int k_limit = msize - (msize % 8);
             for (; k < k_limit; k += 8) {
-                // acc += a[i][k] * b[k][j];
                 __m512d a_vec = _mm512_loadu_pd(&a[i][k]);
                 __m512d b_vec = _mm512_loadu_pd(&t[j][k]);
                 acc_vec = _mm512_fmadd_pd(a_vec, b_vec, acc_vec);
@@ -64,7 +46,8 @@ void mul(int msize, int tidx, int numt, Vector *vec, TYPE a[][NUM], TYPE b[][NUM
 
             c[i][j] = acc;
             // vector_append appends an int cast from a TYPE(double).
-            vector_append(vec, acc);
+            // vector_append(vec, acc);
+            vec->data[vec->size++] = acc;
         }
     }
 }
