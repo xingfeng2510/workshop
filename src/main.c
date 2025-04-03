@@ -3,6 +3,9 @@
 #include <stdio.h>
 #include <time.h>
 #include <malloc.h>
+#include <string.h>
+#include <stdbool.h>
+#include <math.h>
 #include <sys/time.h>
 
 #include "mul.h"
@@ -42,7 +45,7 @@ void print_arr(char *name, TYPE array[][NUM])
     }
 }
 
-void MultiplyOnce(int iter)
+void MultiplyOnce(int iter, bool do_check)
 {
     double start=0.0, stop=0.0;
     struct timeval  before, after;
@@ -67,6 +70,12 @@ void MultiplyOnce(int iter)
 	buf4 = (char *) malloc(NUM*NUM*(sizeof (double))+1024);
 	addr4 = buf4 + 256 - ((UINT64)buf4%256) + (UINT64)Offset_Addr4;
 
+	int nbytes = NUM*NUM*(sizeof (double))+1024;
+	memset(buf1, 0, nbytes);
+	memset(buf2, 0, nbytes);
+	memset(buf3, 0, nbytes);
+	memset(buf4, 0, nbytes);
+
 	a = (array *)addr1;
 	b = (array *)addr2;
 	c = (array *)addr3;
@@ -79,6 +88,12 @@ void MultiplyOnce(int iter)
 	
 	gettimeofday(&before, NULL);
 
+	// for (int k = 0; k < NUM; k++) {
+    //     for (int j = 0; j < NUM; j++) {
+    //         t[j][k] = b[k][j];
+    //     }
+    // }
+
 	ParallelMultiply(NUM, a, b, c, t);
 
 	gettimeofday(&after, NULL);
@@ -88,6 +103,27 @@ void MultiplyOnce(int iter)
 	mflops = flops / 1000000.0f / secs;
 	printf("Matrix multiply iteration %d: cost %2.3lf seconds\n", iter, secs);
 	fflush(stdout);
+
+	// Also, check if mul is correct. This is slow.
+	if (do_check) {
+		gettimeofday(&before, NULL);
+		for (int i = 0; i < NUM; i++) {
+			for (int j = 0; j < NUM; j++) {
+				// c was initialized to zero
+				TYPE acc = 0;
+				for (int k = 0; k < NUM; k++) {
+					acc += a[i][k] * b[k][j];
+				}
+				if (fabs(c[i][j] - acc) > 1e-6) {
+					printf("  c[%d][%d] (%f) != %f\n", i, j, c[i][j], acc);
+					exit(EXIT_FAILURE);
+				}
+			}
+		}
+		gettimeofday(&after, NULL);
+		secs = (after.tv_sec - before.tv_sec) + (after.tv_usec - before.tv_usec)/1000000.0;
+		printf("The result was correct, and the check took %2.3lf seconds\n", secs);
+	}
 
     // free memory
 	free (buf1);
@@ -101,7 +137,7 @@ int main()
     Initialize();
     
     for (int i = 1; i <= 100; i++) {
-        MultiplyOnce(i);
+        MultiplyOnce(i, false);
     }
 
     return 0;

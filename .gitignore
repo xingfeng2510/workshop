@@ -1,0 +1,6 @@
+perf.data
+perf.data.old
+/workshop
+/build
+/*.o
+/.vscode

@@ -1,7 +1,7 @@
 SHELL = /bin/sh
 
 GCC     = gcc
-CFLAGS  = -g -O2 -fno-asm
+CFLAGS  = -g -O2 -fno-asm -march=native
 LDFLAGS = -lpthread -lm
 
 GCC_EXE = workshop.gcc

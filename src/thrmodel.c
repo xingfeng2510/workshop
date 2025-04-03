@@ -31,7 +31,7 @@ void *ThreadFunction(void *ptr)
 	mul(par->msize, par->tidx, par->numt, par->vec, par->a, par->b, par->c, par->t);
 
 	// destroy vector here
-	// vector_destroy(par->vec);
+	vector_destroy(par->vec);
 
 	pthread_exit((void *)0);
 }
@@ -50,6 +50,7 @@ void ParallelMultiply(int msize, TYPE a[][NUM], TYPE b[][NUM], TYPE c[][NUM], TY
 	int tidx;
 
 	GetModelParams(&NTHREADS, &MSIZE, 0);
+	// NTHREADS = 1;
 
 	for (tidx = 0; tidx < NTHREADS; tidx++) {
 		par[tidx].msize = MSIZE;
