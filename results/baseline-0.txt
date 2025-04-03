@@ -1,0 +1,9 @@
+Matrix multiply iteration 1: cost 36.026 seconds
+Matrix multiply iteration 2: cost 35.869 seconds
+Matrix multiply iteration 3: cost 36.269 seconds
+Matrix multiply iteration 4: cost 34.838 seconds
+Matrix multiply iteration 5: cost 36.829 seconds
+Matrix multiply iteration 6: cost 35.541 seconds
+Matrix multiply iteration 7: cost 34.839 seconds
+Matrix multiply iteration 8: cost 36.518 seconds
+Matrix multiply iteration 9: cost 37.043 seconds

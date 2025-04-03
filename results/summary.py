@@ -14,6 +14,10 @@ for f in files:
     files_with_stats.append([f, avg])
 
 files_with_stats.sort(key=lambda f : f[1])
+baseline_time = files_with_stats[-1][1]
 
 for f, avg in files_with_stats:
-    print(f'File: {f}, average time: {avg:.4f}s')
+    line = f'File: {f}, average time: {avg:.4f}s'
+    if baseline_time != avg:
+        line += f' ({(baseline_time / avg):.2f}x)'
+    print(line)

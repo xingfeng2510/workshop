@@ -45,6 +45,7 @@ void print_arr(char *name, TYPE array[][NUM])
     }
 }
 
+__attribute__((optimize("unroll-loops")))
 void MultiplyOnce(int iter, bool do_check)
 {
     double start=0.0, stop=0.0;
