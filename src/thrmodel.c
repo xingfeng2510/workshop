@@ -31,7 +31,7 @@ void *ThreadFunction(void *ptr)
 	mul(par->msize, par->tidx, par->numt, par->vec, par->a, par->b, par->c, par->t);
 
 	// destroy vector here
-	// vector_destroy(par->vec);
+	vector_destroy(par->vec);
 
 	pthread_exit((void *)0);
 }
