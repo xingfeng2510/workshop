@@ -50,7 +50,7 @@ void ParallelMultiply(int msize, TYPE a[][NUM], TYPE b[][NUM], TYPE c[][NUM], TY
 	int tidx;
 
 	GetModelParams(&NTHREADS, &MSIZE, 0);
-	// NTHREADS = 1;
+	NTHREADS = (NTHREADS + 1) / 2;
 
 	for (tidx = 0; tidx < NTHREADS; tidx++) {
 		par[tidx].msize = MSIZE;

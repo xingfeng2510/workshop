@@ -88,11 +88,11 @@ void MultiplyOnce(int iter, bool do_check)
 	
 	gettimeofday(&before, NULL);
 
-	// for (int k = 0; k < NUM; k++) {
-    //     for (int j = 0; j < NUM; j++) {
-    //         t[j][k] = b[k][j];
-    //     }
-    // }
+	for (int k = 0; k < NUM; k++) {
+        for (int j = 0; j < NUM; j++) {
+            t[j][k] = b[k][j];
+        }
+    }
 
 	ParallelMultiply(NUM, a, b, c, t);
 
