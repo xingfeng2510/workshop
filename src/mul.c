@@ -21,11 +21,11 @@ void mul(int msize, int tidx, int numt, Vector *vec, TYPE a[][NUM], TYPE b[][NUM
     // The original code performs a matrix-multiply-add, and we keep the semantics here by loading
     // the initial value of c[i][j].
 
-    // 1. 2048 / sizeof(double) = 256 elements should be multiple of any block size.
+    // 1. 2048(NUM) elements should be multiple of any block size.
     // 2. block sizes should be multiple of 512/64 = 8 elements.
-    const int BLOCK_SIZE_I = 128;
-    const int BLOCK_SIZE_J = 128;
-    const int BLOCK_SIZE_K = 128;
+    const int BLOCK_SIZE_I = 192;
+    const int BLOCK_SIZE_J = 192;
+    const int BLOCK_SIZE_K = 192;
 
     for (int ii = start; ii < end; ii += BLOCK_SIZE_I) {
         int i_end = (ii + BLOCK_SIZE_I < end) ? ii + BLOCK_SIZE_I : end;
@@ -40,7 +40,7 @@ void mul(int msize, int tidx, int numt, Vector *vec, TYPE a[][NUM], TYPE b[][NUM
                     for (int j = jj; j < j_end; j++) {
                         TYPE acc = c[i][j];
                         
-                        // Parallize for-k (assume data is aligned)
+                        // Parallize for-k (_mm512_loadu_pd does not need 512-bit alignment)
                         // NOTE: to compile this we should add -march=native. Fortunately, avx512 is supported.
                         int k = kk;
                         __m512d acc_vec = _mm512_setzero_pd(); // 8 * sizeof(double)
