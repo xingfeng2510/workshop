@@ -1,14 +1,13 @@
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "vector.h"
-
+#include "mul.h"
 Vector *vector_create()
 {
     Vector *vec = malloc(sizeof(Vector));
-    vec->data = malloc(10 * sizeof(int));
+    vec->data = malloc(NUM/MAXTHREADS*NUM * sizeof(int));
     vec->size = 0;
-    vec->capacity = 10;
+    vec->capacity = NUM/MAXTHREADS*NUM;
     return vec;
 }
 
