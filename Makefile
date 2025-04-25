@@ -1,7 +1,7 @@
 SHELL = /bin/sh
 
 GCC     = gcc
-CFLAGS  = -g -mavx512f -O2 -funroll-loops -ffast-math -flto
+CFLAGS  = -g -mavx512f -O3 -funroll-loops -ffast-math -flto
 LDFLAGS = -lpthread -lm
 
 GCC_EXE = workshop.gcc
