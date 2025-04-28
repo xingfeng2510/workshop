@@ -2,7 +2,7 @@
 
 #define MAXTHREADS 2
 #define NUM 2048
-#define BLOCK_SIZE 1024
+#define BLOCK_SIZE 512
 
 typedef double TYPE;
 typedef TYPE array[NUM];
